@@ -35,4 +35,29 @@ const register = async (req, res) => {
     });
 };
 
-module.exports = { register };
+const login = async (req, res) => {
+    const { password, email } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+        res.status(404).json({ errors: ["Usuário não existe"] });
+        return;
+    }
+
+    if (!bcrypt.compare(password, user.password)) {
+        res.status(422).json({ errors: ["A senha está incorreta"] });
+        return;
+    }
+
+    res.status(201).json({
+        _id: user._id,
+        image: user.image,
+        token: generateToken(user._id),
+    });
+};
+
+const getCurrentUser = async (req, res) => {
+    const user = req.user;
+    res.status(200).json(user);
+};
+
+module.exports = { register, login, getCurrentUser };
