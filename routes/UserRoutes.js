@@ -6,6 +6,7 @@ const {
     login,
     getCurrentUser,
     update,
+    getUserById,
 } = require("../controller/UserController");
 const imageUpload = require("../middlewares/imageUpload");
 const validate = require("../middlewares/handleValidation");
@@ -25,4 +26,5 @@ router.put(
     validate,
     imageUpload.single("image")
 );
+router.get("/:id", getUserById);
 module.exports = router;

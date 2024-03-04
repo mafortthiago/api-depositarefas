@@ -54,7 +54,22 @@ const login = async (req, res) => {
         token: generateToken(user._id),
     });
 };
-
+const getUserById = (req, res) => {
+    const { id } = req.params;
+    try {
+        const user = User.findById(mongoose.Types.ObjectId(id)).select(
+            "-password"
+        );
+        if (!user) {
+            res.status(404).json({ errors: ["Usuário não existe."] });
+            return;
+        }
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(404).json({ errors: ["Usuário não existe."] });
+        return;
+    }
+};
 const update = async (req, res) => {
     const { name, password, bio } = req.body;
     let image = null;
@@ -87,4 +102,4 @@ const getCurrentUser = async (req, res) => {
     res.status(200).json(user);
 };
 
-module.exports = { register, login, getCurrentUser, update };
+module.exports = { register, login, getCurrentUser, update, getUserById };
