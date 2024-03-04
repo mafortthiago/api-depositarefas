@@ -2,7 +2,7 @@ const User = require("../model/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
-
+const mongoose = require("mongoose");
 const generateToken = (id) => {
     return jwt.sign({ id }, jwtSecret, { expiresIn: "15d" });
 };
@@ -55,9 +55,36 @@ const login = async (req, res) => {
     });
 };
 
+const update = async (req, res) => {
+    const { name, password, bio } = req.body;
+    let image = null;
+
+    if (req.file) {
+        image = req.file.filename;
+    }
+
+    const user = await User.findById(
+        mongoose.Types.ObjectId(req.user._id)
+    ).select("-password");
+
+    if (name) {
+        user.name = name;
+    }
+    if (password) {
+        user.password = await bcrypt.hash(password, await bcrypt.genSalt());
+    }
+    if (image) {
+        user.image = image;
+    }
+    if (bio) {
+        user.bio = bio;
+    }
+    await user.save();
+    res.status(200).json(user);
+};
 const getCurrentUser = async (req, res) => {
     const user = req.user;
     res.status(200).json(user);
 };
 
-module.exports = { register, login, getCurrentUser };
+module.exports = { register, login, getCurrentUser, update };

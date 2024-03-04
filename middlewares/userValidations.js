@@ -38,4 +38,21 @@ const userLoginValidation = () => {
         body("password").isString().withMessage("A senha é obrigatória"),
     ];
 };
-module.exports = { userCreateValidation, userLoginValidation };
+
+const userUpdateValidation = () => {
+    return [
+        body("name")
+            .optional()
+            .isLength({ min: 2 })
+            .withMessage("O nome deve ter ao menos 2 caracteres."),
+        body("password")
+            .optional()
+            .isLength({ min: 6 })
+            .withMessage("A senha deve ter ao menos 6 caracteres"),
+    ];
+};
+module.exports = {
+    userCreateValidation,
+    userLoginValidation,
+    userUpdateValidation,
+};
