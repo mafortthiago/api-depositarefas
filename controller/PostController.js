@@ -47,4 +47,10 @@ const removePost = async (req, res) => {
     }
 };
 
-module.exports = { insertPost, removePost };
+const getPosts = async (req, res) => {
+    const posts = await Post.find({})
+        .sort([["createdAt", -1]])
+        .exec();
+    res.status(200).json(posts);
+};
+module.exports = { insertPost, removePost, getPosts };
