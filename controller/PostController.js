@@ -17,8 +17,34 @@ const insertPost = async (req, res) => {
 
     if (!newPost) {
         res.status(422).json({ errors: "Houve um erro, tente novamente." });
+        return;
     }
     res.status(201).json(newPost);
 };
 
-module.exports = { insertPost };
+const removePost = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const post = await Post.findById(mongoose.Types.ObjectId(id));
+
+        if (post) {
+            res.status(404).json({ errors: ["O post não existe"] });
+            return;
+        }
+
+        if (!post.userId.equals(req.user._id)) {
+            res.status(422).json({ errors: ["Erro! Tente novamente"] });
+            return;
+        }
+        await Post.findByIdAndDelete(post._id);
+        res.status(200).json({
+            id: post._id,
+            message: "Foto excluida!",
+        });
+    } catch (error) {
+        res.status(404).json({ errors: ["Post não encontrado."] });
+        return;
+    }
+};
+
+module.exports = { insertPost, removePost };

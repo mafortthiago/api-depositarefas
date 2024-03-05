@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { insertPost } = require("../controller/PostController");
+const { insertPost, removePost } = require("../controller/PostController");
 const { imageUpload } = require("../middlewares/imageUpload");
 const { postInsertValidation } = require("../middlewares/postValidation");
 const authGuard = require("../middlewares/authGuard");
@@ -15,4 +15,5 @@ router.post(
     validate,
     insertPost
 );
+router.delete("/:id", authGuard, removePost);
 module.exports = router;
