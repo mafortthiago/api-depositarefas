@@ -17,4 +17,29 @@ const postInsertValidation = () => {
     ];
 };
 
-module.exports = { postInsertValidation };
+const postUpdateValidation = () => {
+    return [
+        body("title")
+            .optional()
+            .isString()
+            .withMessage("Preencha o título")
+            .isString({ min: 3 })
+            .withMessage("O título deve ter ao menos 3 caracteres."),
+        body("text")
+            .optional()
+            .isString()
+            .withMessage("Preencha o texto")
+            .isString({ min: 20 })
+            .withMessage("O texto deve ter ao menos 20 caracteres."),
+    ];
+};
+
+const commentValidation = () => {
+    return [body("comment").isString().withMessage("Preencha o comentário.")];
+};
+
+module.exports = {
+    postInsertValidation,
+    postUpdateValidation,
+    commentValidation,
+};
