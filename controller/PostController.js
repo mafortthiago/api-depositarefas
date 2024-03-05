@@ -53,4 +53,31 @@ const getPosts = async (req, res) => {
         .exec();
     res.status(200).json(posts);
 };
-module.exports = { insertPost, removePost, getPosts };
+
+const getUserPosts = async (req, res) => {
+    const { id } = req.params;
+    const posts = await Post.find({ userId: id })
+        .sort([["createdAt", -1]])
+        .exec();
+
+    res.status(200).json(posts);
+};
+const getPostById = async (req, res) => {
+    const { id } = req.params;
+    const post = await Post.findById(mongoose.Types.ObjectId(id));
+
+    if (post) {
+        res.status(404).json({ errors: ["Post não encontrado"] });
+        return;
+    }
+
+    res.status(200).json(post);
+};
+
+module.exports = {
+    insertPost,
+    removePost,
+    getPosts,
+    getUserPosts,
+    getPostById,
+};
