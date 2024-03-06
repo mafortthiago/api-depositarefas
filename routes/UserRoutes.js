@@ -18,13 +18,16 @@ const {
 } = require("../middlewares/userValidations");
 router.post("/register", userCreateValidation(), validate, register);
 router.post("/login", userLoginValidation(), validate, login);
-router.get("/profile", authGuard, getCurrentUser, update);
+router.get("/profile", authGuard, getCurrentUser);
+
 router.put(
     "/",
     authGuard,
+    imageUpload.single("image"),
     userUpdateValidation(),
     validate,
-    imageUpload.single("image")
+    update
 );
+
 router.get("/:id", getUserById);
 module.exports = router;
