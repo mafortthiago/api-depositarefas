@@ -18,7 +18,7 @@ const {
     postUpdateValidation,
     commentValidation,
 } = require("../middlewares/postValidation");
-const authGuard = require("../middlewares/authGuard");
+const { authGuard } = require("../middlewares/authGuard");
 const validate = require("../middlewares/handleValidation");
 
 router.post(
