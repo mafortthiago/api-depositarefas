@@ -2,7 +2,7 @@ const User = require("../model/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
-const mongoose = require("mongoose");
+const { default: mongoose } = require("mongoose");
 const generateToken = (id) => {
     return jwt.sign({ id }, jwtSecret, { expiresIn: "15d" });
 };
@@ -19,7 +19,7 @@ const register = async (req, res) => {
         await bcrypt.genSalt()
     );
 
-    const newUser = User.create({
+    const newUser = await User.create({
         name,
         email,
         password: passwordEncrypted,
@@ -43,12 +43,12 @@ const login = async (req, res) => {
         return;
     }
 
-    if (!bcrypt.compare(password, user.password)) {
-        res.status(422).json({ errors: ["A senha está incorreta"] });
+    if (!(await bcrypt.compare(password, user.password))) {
+        res.status(422).json({ errors: ["Senha inválida!"] });
         return;
     }
 
-    res.status(201).json({
+    res.status(200).json({
         _id: user._id,
         image: user.image,
         token: generateToken(user._id),

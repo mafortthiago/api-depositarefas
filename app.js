@@ -12,8 +12,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 require("./config/db.js");
-const router = require("./routes/Router");
+const router = require("./routes/Router.js");
 app.use(router);
 app.listen(port, () => {
-  console.log("App rodando");
+    console.log("App rodando");
 });
